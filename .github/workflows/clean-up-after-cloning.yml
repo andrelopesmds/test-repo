@@ -1,0 +1,29 @@
+name: Clean up after cloning
+
+on:
+  workflow_dispatch
+
+jobs:
+  test-clean-up-repo:
+    if: ${{ github.event.repository.name == 'template-repository-poc' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: hello world step
+        run: echo ${{ github.event.repository.name }}
+
+      - name: Warning!
+        run: echo "You should not run this workflow from the template"
+
+  clean-up:
+    if: ${{ github.event.repository.name != 'template-repository-poc' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - run: rm test.txt
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
